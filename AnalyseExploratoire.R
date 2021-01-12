@@ -33,13 +33,8 @@ for (i in data_commune$Insee.Com){
 
 
 # on fait une jointure
-datafinal_3 = left_join(datafinal_2,data_commune,by=Insee.Com)
-#ou alors :
-datafinal_3 = datafinal_2 %>% left_join(data_commune,by=Insee.Com)
+datafinal_3 = left_join(datafinal_2,data_commune,by="Insee.Com")
 
-###  marche pas, il faut que les tableaux soient de memes dimensions
-#du coup, faire un lapply
-mafonction=function(){
-  
-}
-nouvelleColonne=lapply(datafinal_2$Insee.Com,mafonction)
+datafinal_3 = leftjoin(datafinal_3,data_region,by="")
+
+datafinal_3 = leftjoin(datafinal_3,data_departement,by="Code.departement")

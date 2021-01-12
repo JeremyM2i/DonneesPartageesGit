@@ -2,20 +2,18 @@
 setwd("C:/Users/Administrateur/Documents/FormationDataScientist/FilRouge/DonneesPartageesGit")
 #setwd("//home//jeremy//FormationDataScience//FilRouge//Donnees")#Pathway Linux
 fichier=read.csv2("geoflar-communes-2016.csv",sep=";",na.string="", header=TRUE,encoding="UTF-8")
+localisation=paste(fichier$Nom.Com,fichier$Nom.Dept)
+fichier=data.frame(fichier,localisation)
 
-names(fichier)
 colonneASupp=c(1,2,3,4,7,8,9,10,11,12,15,18,21)
 fichier2=fichier[,-colonneASupp]
 fichier2
-attach(fichier2)
 
-########### Densité de pop communes
-densitePopCommune=POPULATION/SUPERFICIE
 
 ########### Population par region
 region=c()
 popRegion=c()
-for (i in unique(Nom.Reg)){
+for (i in unique(fichier2$Nom.Reg)){
   #print(i)
   region=c(region,i)
   popRegion=c(popRegion,sum(fichier2$POPULATION[fichier2$Nom.Reg==i][!is.na(fichier2$POPULATION[fichier2$Nom.Reg==i])]))
@@ -23,7 +21,7 @@ for (i in unique(Nom.Reg)){
 ########## superficie par region
 region=c()
 superfRegion=c()
-for (i in unique(Nom.Reg)){
+for (i in unique(fichier2$Nom.Reg)){
   #print(i)
   region=c(region,i)
   superfRegion=c(superfRegion,sum(fichier2$SUPERFICIE[fichier2$Nom.Reg==i][!is.na(fichier2$SUPERFICIE[fichier2$Nom.Reg==i])]))
@@ -41,7 +39,7 @@ fichier=left_join(fichier,dfRegion,by="Nom.Reg")
 ########## Population par departement
 departement=c()
 popDep=c()
-for (i in unique(Nom.Dept)){
+for (i in unique(fichier2$Nom.Dept)){
   #print(i)
   departement=c(departement,i)
   popDep=c(popDep,sum(fichier2$POPULATION[fichier2$Nom.Dept==i][!is.na(fichier2$POPULATION[fichier2$Nom.Dept==i])]))
@@ -50,7 +48,7 @@ for (i in unique(Nom.Dept)){
 ########## superficie par departement
 departement=c()
 superfDep=c()
-for (i in unique(Nom.Dept)){
+for (i in unique(fichier2$Nom.Dept)){
   #print(i)
   departement=c(departement,i)
   superfDep=c(superfDep,sum(fichier2$SUPERFICIE[fichier2$Nom.Dept==i][!is.na(fichier2$SUPERFICIE[fichier2$Nom.Dept==i])]))
@@ -67,21 +65,12 @@ fichier=left_join(fichier,dfDepartement,by="Nom.Dept")
 
 ###################
 
-###### PROBLEME AU LEFT JOIN COMMUNES!!! IL AJOUTE DES LIGNES..... ##############
-dfCommune=data.frame(Nom.Com,densitePopCommune)
-fichier2=fichier
-fichier2=left_join(fichier,dfCommune,by="Nom.Com")
+########### Densité de pop communes
+densitePopCommune=fichier2$POPULATION/fichier2$SUPERFICIE
 
-
-
-
-write.table(dfCommune,"DataCommunes.csv",sep=";",dec=".")
-write.table(dfDepartement,"DataDepartements.csv",sep=";",dec=".")
-write.table(dfRegion,"DataRegions.csv",sep=";",dec=".")
+## On réécris le fichier geoflar avec pour chaque ville les pop et densité de la region et du département associées a la commune
 
 write.table(fichier,"geoflar-communes-2016-modifie.csv",sep=";",dec=".")
-
-data_final= readRDS("data_save.rds")
 
 ## Dans le fichier final a 3M de lignes :
 #### Les codes communes sont censé avoir 3 chiffres , ex 003 mais ceux en dessous de 100 n'ont que un ou deux chiffres
