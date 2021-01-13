@@ -1,5 +1,6 @@
 
 setwd("C:/Users/Administrateur/Documents/FormationDataScientist/FilRouge/DonneesPartageesGit")
+data_final= readRDS("data_save.rds")
 #setwd("//home//jeremy//FormationDataScience//FilRouge//Donnees")#Pathway Linux
 fichier=read.csv2("geoflar-communes-2016.csv",sep=";",na.string="", header=TRUE,encoding="UTF-8")
 localisation=paste(fichier$Nom.Com,fichier$Nom.Dept)
@@ -72,6 +73,15 @@ densitePopCommune=fichier2$POPULATION/fichier2$SUPERFICIE
 
 write.table(fichier,"geoflar-communes-2016-modifie.csv",sep=";",dec=".")
 
+
+
+
+
+#### 2eme partie, on ajoute les pop et densiteDePop (presentes dans geoflar) vers notre tableau immobilier (2.6M de lignes)
+
+
+
+
 ## Dans le fichier final a 3M de lignes :
 #### Les codes communes sont censé avoir 3 chiffres , ex 003 mais ceux en dessous de 100 n'ont que un ou deux chiffres
 #donc on rajoute les 0 manquants
@@ -87,7 +97,7 @@ Insee.Com=paste(data_final$Code.departement,data_final$Code.commune,sep="")
 datafinal=data.frame(data_final,Insee.Com)
 
 #on retire du fichier geofla les colonnes qu'on ne veut pas ajouter a la fin au fichier a 3M de lignes
-colonnesInutiles=c(1,2,3,4,7,8,9,10,11,12,15,16,17,18,19,20,21)
+colonnesInutiles=c(1,2,3,4,7,8,9,10,11,12,15,16,17,18,20,21,22)
 fichier=fichier[,-colonnesInutiles]
 
 
